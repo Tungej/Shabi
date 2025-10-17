@@ -1,0 +1,956 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Shabi Engineering</title>
+  <link rel="icon" type="image/png" href="fav.png">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --accent:#ff6b00;
+      --bg:#0b0b0b;
+      --muted: #cfcfcf;
+    }
+
+    *{box-sizing:border-box}
+    html,body{height:100%;margin:0;font-family:Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;color:#fff;background:var(--bg);-webkit-font-smoothing:antialiased}
+
+    /* Header */
+    header.site-header{
+      position:absolute;inset:0 0 auto 0;display:flex;align-items:center;justify-content:space-between;padding:22px 44px;z-index:60;pointer-events:auto;transition:all .28s ease;}
+    header.site-header .nav-left{display:flex;gap:24px;align-items:center}
+    header.site-header .brand{font-weight:800;letter-spacing:0.4px}
+    header.site-header nav ul{display:flex;gap:18px;list-style:none;margin:0;padding:0}
+    header.site-header nav a{color:rgba(255,255,255,.95);text-decoration:none;font-weight:600;font-size:15px}
+
+    header.site-header .logo-wrap img{height:46px;width:auto;display:block}
+
+    /* Sticky style after scroll */
+    header.site-header.scrolled{position:fixed;background:linear-gradient(180deg, rgba(11,11,11,0.65), rgba(11,11,11,0.45));backdrop-filter:blur(6px);box-shadow:0 6px 18px rgba(0,0,0,.45);padding:10px 28px}
+
+    /* Mobile menu button */
+    .menu-toggle{
+      display:none;
+      background: transparent;
+      border: 2px solid rgba(255,255,255,0.06);
+      color:inherit;
+      font-size:18px;
+      cursor:pointer;
+      padding:8px 10px;
+      border-radius:10px;
+      position:relative;
+      z-index:1;
+      transition: transform .12s ease, box-shadow .12s ease, background .12s ease;
+      backdrop-filter: blur(2px);
+    }
+    .menu-toggle:hover{
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.45);
+      background: rgba(255,255,255,0.02);
+    }
+    .menu-toggle:focus{ outline: none; box-shadow: 0 0 0 4px rgba(255,107,0,0.12); }
+
+    /* Hero */
+    .hero{
+      height:100vh;
+      min-height:640px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      position:relative;
+      background-image:url('https://i.postimg.cc/hPHyDqLs/steel-1968194-1920.jpg');
+      background-size:cover;
+      background-position:center center;
+      background-repeat:no-repeat;
+      z-index:0;
+      animation: shimmer 8s ease-in-out infinite;
+    }
+    .hero::after{
+      content:"";
+      position:absolute;
+      inset:0;
+      background:linear-gradient(180deg, rgba(8,8,8,0.14), rgba(0,0,0,0.64));
+      mix-blend-mode:multiply;
+      z-index:1;
+    }
+    .hero-inner{
+      position:relative;
+      z-index:30;
+      text-align:center;
+      padding:0 20px;
+      max-width:1100px;
+    }
+    .eyebrow{
+      display:inline-block;
+      background:rgba(255,255,255,0.06);
+      padding:8px 12px;
+      border-radius:999px;
+      font-weight:600;
+      margin-bottom:18px;
+      color:var(--muted);
+    }
+    h1{font-size:clamp(32px,6vw,64px);line-height:1.02;margin:0 0 18px;font-weight:800}
+    p.lead{font-size:clamp(16px,2.2vw,19px);color:#e9e9e9;margin:0 0 20px}
+
+    /* Shimmer effect for video-like motion */
+    @keyframes shimmer {
+      0% { filter: brightness(1) contrast(1); transform: scale(1); }
+      50% { filter: brightness(1.1) contrast(1.05); transform: scale(1.02); }
+      100% { filter: brightness(1) contrast(1); transform: scale(1); }
+    }
+
+    /* Smoke effect */
+    .hero::before,
+    .hero .smoke-layer{
+      content:"";
+      position:absolute;
+      inset:0;
+      background:radial-gradient(circle at 50% 50%, rgba(200,200,200,0.08) 0%, rgba(100,100,100,0.04) 50%, transparent 100%);
+      filter:blur(20px);
+      opacity:0.3;
+      z-index:2;
+      pointer-events:none;
+      animation:smokeDrift 12s ease-in-out infinite;
+    }
+    .hero .smoke-layer{
+      animation:smokeDriftAlt 15s ease-in-out infinite;
+      opacity:0.2;
+      background:radial-gradient(circle at 30% 70%, rgba(150,150,150,0.06) 0%, rgba(80,80,80,0.03) 50%, transparent 100%);
+    }
+    @keyframes smokeDrift {
+      0% { transform:translate(0, 0) scale(1); opacity:0.3; }
+      50% { transform:translate(15px, -25px) scale(1.08); opacity:0.45; }
+      100% { transform:translate(0, 0) scale(1); opacity:0.3; }
+    }
+    @keyframes smokeDriftAlt {
+      0% { transform:translate(0, 0) scale(1); opacity:0.2; }
+      50% { transform:translate(-20px, 15px) scale(1.1); opacity:0.35; }
+      100% { transform:translate(0, 0) scale(1); opacity:0.2; }
+    }
+
+    /* Fire flare particles */
+    .fire-particle {
+      position: absolute;
+      width: 8px;
+      height: 8px;
+      background: radial-gradient(circle, rgba(255, 100, 0, 0.8) 0%, rgba(255, 50, 0, 0.4) 50%, transparent 100%);
+      border-radius: 50%;
+      filter: blur(3px);
+      z-index: 3;
+      bottom: 0;
+      animation: fireFlare 2s ease-out infinite;
+      pointer-events: none;
+    }
+    .fire-particle:nth-child(1) { left: 10%; animation-delay: 0s; animation-duration: 1.8s; }
+    .fire-particle:nth-child(2) { left: 20%; animation-delay: 0.5s; animation-duration: 2.2s; }
+    .fire-particle:nth-child(3) { left: 35%; animation-delay: 0.2s; animation-duration: 1.9s; }
+    .fire-particle:nth-child(4) { left: 50%; animation-delay: 0.8s; animation-duration: 2.1s; }
+    .fire-particle:nth-child(5) { left: 65%; animation-delay: 0.3s; animation-duration: 2.3s; }
+    .fire-particle:nth-child(6) { left: 80%; animation-delay: 0.6s; animation-duration: 2s; }
+    .fire-particle:nth-child(7) { left: 90%; animation-delay: 0.4s; animation-duration: 1.7s; }
+
+    @keyframes fireFlare {
+      0% {
+        transform: translateY(0) translateX(0);
+        opacity: 0.8;
+      }
+      50% {
+        transform: translateY(-60vh) translateX(10px);
+        opacity: 0.4;
+      }
+      100% {
+        transform: translateY(-80vh) translateX(-5px);
+        opacity: 0;
+      }
+    }
+
+    /* WhatsApp floating icon */
+    .whatsapp-icon {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      width: 60px;
+      height: 60px;
+      background: #25D366;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 50;
+      transition: opacity 0.3s ease, transform 0.3s ease;
+      animation: bounce 2s ease-in-out infinite;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    }
+    .whatsapp-icon img {
+      width: 32px;
+      height: 32px;
+    }
+    .whatsapp-icon:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 6px 16px rgba(0,0,0,0.4);
+    }
+    .whatsapp-icon:focus {
+      outline: none;
+      box-shadow: 0 0 0 4px rgba(255,255,255,0.2);
+    }
+    .whatsapp-icon.hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
+
+    /* Rotating button styles for hero and product section CTAs */
+    .cta {
+      position: relative;
+      padding: 16px 40px;
+      background: #0b0b0b;
+      color: #fff;
+      font-size: 18px;
+      font-weight: 600;
+      border: none;
+      border-radius: 50px;
+      cursor: pointer;
+      z-index: 1;
+      overflow: hidden;
+      text-decoration: none;
+      display: inline-block;
+      transition: transform .18s ease;
+      --animation-state: running;
+    }
+
+    .cta::before {
+      content: "";
+      position: absolute;
+      inset: -4px;
+      border-radius: 50px;
+      background: conic-gradient(
+        from 0deg,
+        #ff0000,
+        #00ff00,
+        #0000ff,
+        #ff00ff,
+        #00ffff,
+        #ffff00,
+        #ff0000
+      );
+      z-index: -1;
+      animation: rotate 3s linear infinite;
+      animation-play-state: var(--animation-state);
+    }
+
+    .cta::after {
+      content: "";
+      position: absolute;
+      inset: 2px;
+      background: #0b0b0b;
+      border-radius: 50px;
+      z-index: -1;
+    }
+
+    @keyframes rotate {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    .cta:hover::before {
+      filter: brightness(1.5) blur(2px);
+    }
+
+    .cta:hover {
+      transform: translateY(-2px);
+    }
+
+    .cta:active {
+      transform: translateY(0) scale(0.98);
+    }
+
+    .cta:focus {
+      outline: none;
+      box-shadow: 0 0 0 4px rgba(255,255,255,0.2);
+    }
+
+    /* Smaller variant for product cards */
+    .card .cta {
+      padding: 12px 24px;
+      font-size: 14px;
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    /* Smaller variant for about buttons */
+    .about-buttons .cta {
+      padding: 12px 24px;
+      font-size: 14px;
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+      width: 100%;
+      text-align: center;
+    }
+    .about-buttons .cta.active {
+      transform: translateY(-2px);
+      box-shadow: 0 0 0 4px rgba(255,107,0,0.12);
+    }
+    .about-buttons .cta.active::before {
+      filter: brightness(1.2);
+    }
+
+    /* About buttons container */
+    .about-buttons {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+      margin-top: 18px;
+    }
+
+    /* About text area */
+    .about-text {
+      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+      padding: 18px;
+      border-radius: 12px;
+      margin-top: 18px;
+      min-height: 100px;
+      color: var(--muted);
+      font-size: 0.95rem;
+      line-height: 1.4;
+      transition: opacity 0.3s ease;
+    }
+    .about-text p {
+      margin: 0;
+    }
+
+    /* Product card hover effects */
+    #products .card {
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    #products .card:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 12px 2px var(--accent);
+    }
+
+    /* Center Products section text */
+    #products h2,
+    #products p {
+      text-align: center;
+    }
+
+    /* Our Services section */
+    .services-section{
+      background: linear-gradient(180deg, var(--bg), #071023 120%);
+      color: #fff;
+      padding: 64px 20px;
+    }
+    .container{
+      max-width: 1160px;
+      margin: 0 auto;
+    }
+
+    .services-header{
+      text-align: center;
+      margin-bottom: 36px;
+    }
+    .services-header h2{
+      font-size: clamp(1.5rem, 2.5vw, 2.25rem);
+      margin: 0 0 8px;
+      letter-spacing: 0.2px;
+    }
+    .lead{
+      color: var(--muted);
+      margin: 0;
+      font-size: 1rem;
+    }
+
+    .services-grid{
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      margin-top: 28px;
+    }
+
+    .service-card{
+      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+      border: 1px solid rgba(255,255,255,0.04);
+      padding: 20px;
+      border-radius: 14px;
+      min-height: 220px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      transition: transform .22s ease, box-shadow .22s ease, border-color .22s;
+      outline: none;
+    }
+    .service-card:focus,
+    .service-card:hover{
+      transform: translateY(-6px);
+      box-shadow: 0 10px 30px rgba(2,6,23,0.7);
+      border-color: rgba(230,161,44,0.16);
+    }
+
+    .icon{
+      width: 56px;
+      height: 56px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.00));
+      border-radius: 12px;
+      color: var(--accent);
+    }
+
+    .service-card h3{
+      margin: 0;
+      font-size: 1.05rem;
+    }
+    .service-card p{
+      margin: 0;
+      color: var(--muted);
+      flex-grow: 1;
+      font-size: 0.95rem;
+      line-height: 1.4;
+    }
+
+    .service-card .cta {
+      padding: 12px 24px;
+      font-size: 14px;
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+      margin-top: 8px;
+    }
+
+    .services-footer{
+      margin-top: 22px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+    .services-footer a{ color: var(--accent); text-decoration: underline; }
+
+    /* Responsive */
+    @media (max-width: 992px){
+      .services-grid{ grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 640px){
+      .services-grid{ grid-template-columns: 1fr; }
+      .container{ padding: 0 16px; }
+    }
+    @media (max-width: 900px){
+      .about-buttons{ grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 560px){
+      .about-buttons{ grid-template-columns: 1fr; }
+    }
+
+    /* Respect reduced motion */
+    @media (prefers-reduced-motion: reduce) {
+      .cta::before,
+      .hero,
+      .hero::before,
+      .hero .smoke-layer,
+      .fire-particle,
+      .whatsapp-icon,
+      #products .card,
+      .service-card,
+      .about-buttons .cta,
+      .about-text {
+        transition: none;
+        animation: none;
+      }
+      #products .card:hover,
+      .service-card:hover {
+        transform: none;
+        box-shadow: none;
+        border-color: rgba(255,255,255,0.04);
+      }
+      .about-buttons .cta.active {
+        transform: none;
+      }
+    }
+
+    /* Content sections */
+    main{background:#070707}
+    .section{padding:80px 20px;max-width:1100px;margin:0 auto;color:#dedede;opacity:0;transform:translateY(26px);transition:all .7s cubic-bezier(.2,.9,.2,1);border-bottom:1px solid rgba(255,255,255,0.03)}
+    .section.visible{opacity:1;transform:translateY(0)}
+    .section h2{margin:0 0 12px;font-size:26px;color:#fff}
+    .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:18px}
+    .card{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));padding:18px;border-radius:12px}
+
+    /* Center footer text */
+    .footer-inner > div:first-child {
+      text-align: center;
+      width: 100%;
+    }
+
+    /* About section specific styles */
+    #about {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 24px;
+    }
+    #about .about-content {
+      flex: 1;
+      min-width: 0;
+      max-width: 60%;
+    }
+    #about .about-image {
+      flex: 0 0 40%;
+      max-width: 400px;
+      animation: aboutImageMove 8s ease-in-out infinite;
+      border-radius: 12px;
+      object-fit: cover;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    }
+    @keyframes aboutImageMove {
+      0% { filter: brightness(1) contrast(1); transform: scale(1); }
+      50% { filter: brightness(1.1) contrast(1.05); transform: scale(1.02); }
+      100% { filter: brightness(1) contrast(1); transform: scale(1); }
+    }
+    @media (max-width: 900px) {
+      #about .about-content { max-width: 100%; }
+      #about .about-image { flex: 0 0 100%; max-width: 100%; height: 200px; }
+    }
+    @media (max-width: 560px) {
+      #about .about-image { height: 160px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      #about .about-image { animation: none; }
+    }
+
+    /* Contact section specific styles */
+    #contact {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 24px;
+    }
+    #contact .contact-content {
+      flex: 1;
+      min-width: 0;
+      max-width: 60%;
+    }
+    #contact .contact-image {
+      flex: 0 0 40%;
+      max-width: 400px;
+      animation: aboutImageMove 8s ease-in-out infinite;
+      border-radius: 12px;
+      object-fit: cover;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    }
+    @media (max-width: 900px) {
+      #contact .contact-content { max-width: 100%; }
+      #contact .contact-image { flex: 0 0 100%; max-width: 100%; height: 200px; }
+    }
+    @media (max-width: 560px) {
+      #contact .contact-image { height: 160px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      #contact .contact-image { animation: none; }
+    }
+
+    /* Footer */
+    footer{padding:40px 20px;background:#050505;color:#bdbdbd}
+    .footer-inner{max-width:1100px;margin:0 auto;display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}
+
+    /* Mobile slide-in nav */
+    .mobile-nav{
+      position:fixed;
+      top:60px;
+      right:0;
+      width:200px;
+      min-height:200px;
+      transform:translateX(100%);
+      transition:transform .35s ease;
+      background:rgba(7,7,7,0.8);
+      backdrop-filter:blur(8px);
+      z-index:120;
+      padding:40px 20px 20px 20px;
+      border-radius:0 0 0 12px;
+      box-shadow:-4px 4px 12px rgba(0,0,0,0.4);
+    }
+    .mobile-nav.open{transform:translateX(0)}
+    .mobile-nav nav ul{display:flex;flex-direction:column;gap:16px;padding:0;margin:0}
+    .mobile-nav nav a{font-size:18px;color:#fff;text-decoration:none;font-weight:600}
+    .mobile-nav nav a:hover{text-decoration:underline}
+    .mobile-nav .menu-toggle{
+      position:absolute;
+      top:8px;
+      right:8px;
+      font-size:16px;
+      padding:6px 8px;
+    }
+
+    /* Responsive */
+    @media (max-width:900px){
+      header.site-header{padding:12px 18px}
+      .grid{grid-template-columns:repeat(2,1fr)}
+      .hero{min-height:520px}
+      .menu-toggle{display:block}
+      header.site-header nav{display:none}
+      .logo-wrap img{height:40px}
+      .fire-particle { width: 6px; height: 6px; }
+      .whatsapp-icon { width: 50px; height: 50px; }
+      .whatsapp-icon img { width: 28px; height: 28px; }
+    }
+    @media (max-width:560px){
+      .grid{grid-template-columns:1fr}
+      header.site-header{padding:10px 12px}
+      .logo-wrap img{height:36px}
+      .hero{min-height:460px}
+      h1{font-size:28px}
+      .eyebrow{font-size:13px}
+      .fire-particle { width: 5px; height: 5px; }
+      .whatsapp-icon { width: 40px; height: 40px; }
+      .whatsapp-icon img { width: 24px; height: 24px; }
+      .mobile-nav{
+        width:160px;
+        top:50px;
+        padding:36px 16px 16px 16px;
+      }
+      .mobile-nav nav a{font-size:16px}
+      .mobile-nav .menu-toggle{top:6px;right:6px;font-size:14px;padding:5px 7px}
+    }
+
+    /* small helpers */
+    .muted{color:var(--muted)}
+  </style>
+</head>
+<body>
+  <header class="site-header" id="siteHeader">
+    <div class="nav-left">
+      <div class="logo-wrap"><a href="#home"><img src="./logo.png" alt="Shabi Engineering logo"></a></div>
+      <div class="brand muted"></div>
+    </div>
+
+    <div class="nav-right" style="display:flex;align-items:center;gap:22px">
+      <nav aria-label="Primary navigation">
+        <ul>
+          <li><a href="#home" data-scroll>Home</a></li>
+          <li><a href="#our-services" data-scroll>Services</a></li>
+          <li><a href="#about" data-scroll>About</a></li>
+          <li><a href="#contact" data-scroll>Contact</a></li>
+        </ul>
+      </nav>
+      <button class="menu-toggle" id="menuBtn" aria-label="Open menu">☰</button>
+    </div>
+  </header>
+
+  <div class="mobile-nav" id="mobileNav" aria-hidden="true">
+    <button class="menu-toggle" id="closeBtn" aria-label="Close menu">✕</button>
+    <nav aria-label="Mobile navigation">
+      <ul>
+        <li><a href="#about" data-scroll>About</a></li>
+        <li><a href="#our-services" data-scroll>Services</a></li>
+        <li><a href="#contact" data-scroll>Contact</a></li>
+      </ul>
+    </nav>
+  </div>
+
+  <main>
+    <section id="home" class="hero" role="img" aria-label="Hot steel rolling plant, glowing steel and heavy machinery">
+      <div class="smoke-layer"></div>
+      <div class="fire-particle"></div>
+      <div class="fire-particle"></div>
+      <div class="fire-particle"></div>
+      <div class="fire-particle"></div>
+      <div class="fire-particle"></div>
+      <div class="fire-particle"></div>
+      <div class="fire-particle"></div>
+      <div class="hero-inner">
+        <div class="eyebrow">Hot Steel Rolling • Zvishavane</div>
+        <h1>QUALITY STEEL-BUILT TO LAST</h1>
+        <p class="lead">Supplying hot rolled rebar, angle iron, and expertly crafted window and door frames across Zimbabwe</p>
+        <div style="margin-top:18px">
+          <a class="cta" href="#our-services" data-scroll>Our Services</a>
+        </div>
+      </div>
+    </section>
+
+    <section id="products" class="section reveal">
+      <h2>Products</h2>
+      <p class="muted">Our core hot rolled products engineered for strength and consistency offer the best deal for your money.</p>
+      <div class="grid products-grid" style="margin-top:18px">
+        <div class="card">
+          <img src="./ang.jpg" alt="Angle Iron" style="width:100%;height:160px;object-fit:cover;border-radius:8px;margin-bottom:12px">
+          <strong>Angle Iron</strong>
+          <p class="muted" style="margin-top:8px">Width: 600–1250 mm · Thickness: 1.5–12 mm · Coil weight up to 25 t · Typical grades: S235 — S355</p>
+          <a class="cta" href="#" style="margin-top:12px;display:inline-block">Request quote</a>
+        </div>
+        <div class="card">
+          <img src="./def.jpg" alt="Rebar" style="width:100%;height:160px;object-fit:cover;border-radius:8px;margin-bottom:12px">
+          <strong>Rebar & Sections</strong>
+          <p class="muted" style="margin-top:8px">Diameters 8–40 mm · Conforms to common construction standards · Ribbed surface for improved bonding</p>
+          <a class="cta" href="#" style="margin-top:12px;display:inline-block">Request quote</a>
+        </div>
+        <div class="card">
+          <img src="./wt.png" alt="Window Frame" style="width:100%;height:160px;object-fit:cover;border-radius:8px;margin-bottom:12px">
+          <strong>Window Frame</strong>
+          <p class="muted" style="margin-top:8px">Quality tailored window frames for any project size, BIG or small</p>
+          <a class="cta" href="#" style="margin-top:12px;display:inline-block">Contact Sales</a>
+        </div>
+        <div class="card">
+          <img src="./dr.jpeg" alt="Door Frame" style="width:100%;height:160px;object-fit:cover;border-radius:8px;margin-bottom:12px">
+          <strong>Door Frame</strong>
+          <p class="muted" style="margin-top:8px">Quality tailored door frames for any project size, BIG or small (heavy duty)</p>
+          <a class="cta" href="#" style="margin-top:12px;display:inline-block">Contact Sales</a>
+        </div>
+      </div>
+    </section>
+
+    <section id="about" class="section reveal">
+      <div class="about-content">
+        <h2>About Shabi Engineering</h2>
+        <p class="muted">Proudly manufacturing hot-rolled rebars, angle iron and bespoke steel frames in Zvishavane.</p>
+        <div class="about-buttons">
+          <button class="cta" data-content="who-we-are" aria-controls="about-text" aria-expanded="false">Who we are</button>
+          <button class="cta" data-content="what-we-do" aria-controls="about-text" aria-expanded="false">What we do</button>
+          <button class="cta" data-content="our-promise" aria-controls="about-text" aria-expanded="false">Our promise</button>
+        </div>
+        <div class="about-text" id="about-text" aria-live="polite"></div>
+      </div>
+      <img src="./se.jpg" alt="Shabi Engineering hot rolling plant" class="about-image">
+    </section>
+
+    <section id="our-services" class="services-section section reveal" aria-labelledby="services-heading">
+      <div class="container">
+        <header class="services-header">
+          <h2 id="services-heading">Our Services</h2>
+          <p class="lead">High-quality steel products and fabrication, made locally in Zvishavane. Reliable supply, custom sizes and fast turnaround.</p>
+        </header>
+
+        <div class="services-grid" role="list">
+          <article class="service-card" role="listitem" tabindex="0" aria-labelledby="s1-title">
+            <div class="icon" aria-hidden="true">
+              <svg width="40" height="40" viewBox="0 0 24 24" fill="none"><path d="M3 12h18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M6 6h12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M6 18h12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+            </div>
+            <h3 id="s1-title">Hot-rolled Rebars</h3>
+            <p>Supply of high-strength hot-rolled reinforcing bars in standard and custom lengths & diameters, produced to industry standards.</p>
+            <a class="cta" href="#contact">Get a quote</a>
+          </article>
+
+          <article class="service-card" role="listitem" tabindex="0" aria-labelledby="s2-title">
+            <div class="icon" aria-hidden="true">
+              <svg width="40" height="40" viewBox="0 0 24 24" fill="none"><path d="M4 4v16h16" stroke="currentColor" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg>
+            </div>
+            <h3 id="s2-title">Angle Iron (L-Sections)</h3>
+            <p>Precision-cut angle irons for structural projects, frames, supports and custom profiles — cut to your size and punched on request.</p>
+            <a class="cta" href="#contact">Order now</a>
+          </article>
+
+          <article class="service-card" role="listitem" tabindex="0" aria-labelledby="s3-title">
+            <div class="icon" aria-hidden="true">
+              <svg width="40" height="40" viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="18" height="18" stroke="currentColor" stroke-width="2"/><path d="M12 3v18" stroke="currentColor" stroke-width="2"/></svg>
+            </div>
+            <h3 id="s3-title">Window & Door Frames</h3>
+            <p>Bespoke steel window and door frames — durable, square, and ready for glazing. We fabricate to measured openings and finishing spec.</p>
+            <a class="cta" href="#contact">Request fabrication</a>
+          </article>
+
+          <article class="service-card" role="listitem" tabindex="0" aria-labelledby="s4-title">
+            <div class="icon" aria-hidden="true">
+              <svg width="40" height="40" viewBox="0 0 24 24" fill="none"><path d="M4 20l8-8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="17" cy="7" r="3" stroke="currentColor" stroke-width="2"/></svg>
+            </div>
+            <h3 id="s4-title">General Fabrication & Welding</h3>
+            <p>Plate cutting, welding, assembly and finishing for gates, balustrades, structural repairs and site installations.</p>
+            <a class="cta" href="#contact">Talk to our fabricators</a>
+          </article>
+
+          <article class="service-card" role="listitem" tabindex="0" aria-labelledby="s5-title">
+            <div class="icon" aria-hidden="true">
+              <svg width="40" height="40" viewBox="0 0 24 24" fill="none"><path d="M3 12h18" stroke="currentColor" stroke-width="2"/><path d="M12 3v18" stroke="currentColor" stroke-width="2"/></svg>
+            </div>
+            <h3 id="s5-title">Custom Orders & Cut-to-Size</h3>
+            <p>Small or bulk orders cut to specification — we can roll, cut, punch, and deliver according to project schedules.</p>
+            <a class="cta" href="#contact">Custom order</a>
+          </article>
+
+          <article class="service-card" role="listitem" tabindex="0" aria-labelledby="s6-title">
+            <div class="icon" aria-hidden="true">
+              <svg width="40" height="40" viewBox="0 0 24 24" fill="none"><path d="M3 7h13v10H3z" stroke="currentColor" stroke-width="2"/><circle cx="7" cy="18" r="1" fill="currentColor"/><circle cx="17" cy="18" r="1" fill="currentColor"/></svg>
+            </div>
+            <h3 id="s6-title">Local Delivery & Logistics</h3>
+            <p>Reliable pickup and delivery across Zimbabwe, with coordinated loads for construction sites and projects.</p>
+            <a class="cta" href="#contact">Arrange delivery</a>
+          </article>
+        </div>
+
+        <footer class="services-footer">
+          <p>Need something not listed? <a href="#contact">Contact our sales team</a> — we handle custom projects and large orders.</p>
+        </footer>
+      </div>
+    </section>
+
+    <section id="contact" class="section reveal">
+      <div class="contact-content">
+        <h2>Contact Us</h2>
+        <p class="muted">Reach us for product enquiries, partnerships, or site visits.</p>
+        <div class="card" style="margin-top:18px">
+          <strong>Email:</strong> info@shabi-engineering.co.zw<br>
+          <strong>Phone:</strong> +263 077 277 4954<br>
+          <strong>Address:</strong> 126 Newton Zvishavane, Zvishavane
+        </div>
+      </div>
+      <img src="./map.png" alt="Shabi Engineering contact information" class="contact-image">
+    </section>
+
+    <footer>
+      <div class="footer-inner">
+        <div>&copy; <strong>@Shabi Engineering</strong> <span class="muted">2025</span></div>
+        <div class="muted"></div>
+      </div>
+    </footer>
+
+    <!-- WhatsApp floating icon -->
+    <a href="https://wa.me/+263772774954?text=Hello%20Shabi%20Engineering,%20I%20have%20a%20question%20about%20your%20products" class="whatsapp-icon" aria-label="Chat with us on WhatsApp" target="_blank">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp icon">
+    </a>
+  </main>
+
+  <script>
+    // Mobile nav toggle
+    const menuBtn = document.getElementById('menuBtn');
+    const mobileNav = document.getElementById('mobileNav');
+    const closeBtn = document.getElementById('closeBtn');
+    const siteHeader = document.getElementById('siteHeader');
+    const hero = document.querySelector('.hero');
+    const whatsappIcon = document.querySelector('.whatsapp-icon');
+
+    menuBtn && menuBtn.addEventListener('click', () => {
+      mobileNav.classList.add('open');
+      mobileNav.setAttribute('aria-hidden', 'false');
+    });
+    closeBtn && closeBtn.addEventListener('click', () => {
+      mobileNav.classList.remove('open');
+      mobileNav.setAttribute('aria-hidden', 'true');
+    });
+
+    // Close mobile nav when a link clicked
+    document.querySelectorAll('[data-scroll]').forEach(a => {
+      a.addEventListener('click', (e) => {
+        const href = a.getAttribute('href');
+        if(href && href.startsWith('#')){
+          e.preventDefault();
+          const target = document.querySelector(href);
+          if(target){
+            target.scrollIntoView({behavior:'smooth', block:'start'});
+          }
+        }
+        mobileNav.classList.remove('open');
+        mobileNav.setAttribute('aria-hidden', 'true');
+      })
+    })
+
+    // Toggle header style, parallax effect, and WhatsApp icon visibility
+    let scrollTimeout;
+    const onScroll = () => {
+      if(window.scrollY > 40) siteHeader.classList.add('scrolled');
+      else siteHeader.classList.remove('scrolled');
+
+      // Enhanced parallax effect for hero
+      const scrollPos = window.scrollY;
+      hero.style.backgroundPositionY = `${scrollPos * 0.5}px`;
+
+      // Hide WhatsApp icon during scroll
+      whatsappIcon.classList.add('hidden');
+
+      // Clear any existing timeout
+      clearTimeout(scrollTimeout);
+
+      // Show WhatsApp icon after scrolling stops
+      scrollTimeout = setTimeout(() => {
+        whatsappIcon.classList.remove('hidden');
+      }, 150);
+    }
+    window.addEventListener('scroll', onScroll, {passive:true});
+    onScroll();
+
+    // Reveal on scroll using IntersectionObserver
+    const reveals = document.querySelectorAll('.reveal');
+    if('IntersectionObserver' in window){
+      const io = new IntersectionObserver((entries)=>{
+        entries.forEach(e=>{
+          if(e.isIntersecting){
+            e.target.classList.add('visible');
+            io.unobserve(e.target);
+          }
+        })
+      },{threshold:0.12});
+      reveals.forEach(r=>io.observe(r));
+    } else {
+      reveals.forEach(r=>r.classList.add('visible'));
+    }
+
+    // Keyboard accessibility: close mobile nav on ESC
+    document.addEventListener('keydown', (ev)=>{
+      if(ev.key === 'Escape'){
+        mobileNav.classList.remove('open');
+        mobileNav.setAttribute('aria-hidden','true');
+      }
+    })
+
+    // Toggle rotation for CTAs
+    document.querySelectorAll('.cta').forEach(btn => {
+      let running = true;
+      btn.addEventListener('click', () => {
+        running = !running;
+        btn.style.setProperty('--animation-state', running ? 'running' : 'paused');
+      });
+    });
+
+    // About section button interactions
+    const aboutTextContent = {
+      'who-we-are': 'Shabi Engineering is a locally owned steel manufacturer and fabricator based in Zvishavane. With practical industry experience and a hands-on workshop, we produce hot-rolled reinforcing bars, precision angle iron, and fabricated window & door frames for construction, mining and commercial projects across Zimbabwe.',
+      'what-we-do': 'From small bespoke fabrications to bulk rebar orders, we combine robust rolling and cutting equipment with a skilled fabrication team to deliver reliably and on schedule. Our services include custom cut-to-size orders, welding and assembly, finishing, and coordinated local delivery to project sites.',
+      'our-promise': 'We build durable steel products designed for real projects — accurate sizes, consistent quality, and clear communication. Whether you’re an engineer, contractor or homeowner, we aim to make procurement and installation straightforward.'
+    };
+
+    document.querySelectorAll('.about-buttons .cta').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const contentKey = btn.getAttribute('data-content');
+        const textArea = document.getElementById('about-text');
+        
+        // Update active state
+        document.querySelectorAll('.about-buttons .cta').forEach(b => {
+          b.classList.remove('active');
+          b.setAttribute('aria-expanded', 'false');
+        });
+        btn.classList.add('active');
+        btn.setAttribute('aria-expanded', 'true');
+
+        // Update text content
+        textArea.innerHTML = '';
+        if (contentKey && aboutTextContent[contentKey]) {
+          const p = document.createElement('p');
+          p.classList.add('muted');
+          p.textContent = aboutTextContent[contentKey];
+          textArea.appendChild(p);
+        }
+      });
+    });
+
+    // Keyboard accessibility for focus
+    (function keyboardFocusToggle(){
+      let usingKeyboard = false;
+      function handleKeyDown(e){
+        if(e.key === 'Tab'){
+          usingKeyboard = true;
+          document.documentElement.classList.add('using-keyboard');
+        }
+      }
+      function handleMouseDown(){
+        if(usingKeyboard){
+          usingKeyboard = false;
+          document.documentElement.classList.remove('using-keyboard');
+        }
+      }
+      window.addEventListener('keydown', handleKeyDown);
+      window.addEventListener('mousedown', handleMouseDown);
+    })();
+  </script>
+</body>
+</html>
