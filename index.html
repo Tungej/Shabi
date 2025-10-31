@@ -431,77 +431,103 @@
       color: var(--muted);
       font-size: 0.95rem;
     }
-    /* Foundry Section */
+    /* Foundry Products with Background Images */
 .foundry {
   padding: 6rem 1rem;
-  background: radial-gradient(circle at center, #1b1b1b, #0d0d0d);
+  background: #0c0c0c;
   color: #eee;
   text-align: center;
   position: relative;
-  overflow: hidden;
 }
 
 .foundry h2 {
   font-size: 2.5rem;
-  margin-bottom: 1rem;
   color: #ffcc66;
+  margin-bottom: 1rem;
   text-transform: uppercase;
-  letter-spacing: 1px;
 }
 
 .foundry .section-intro {
-  max-width: 700px;
-  margin: 0 auto 3rem;
-  font-size: 1.1rem;
   color: #ccc;
+  margin-bottom: 3rem;
 }
 
 .foundry-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   gap: 2rem;
-  justify-items: center;
 }
 
+/* Each card uses image as background */
 .foundry .card {
-  background: #1e1e1e;
-  border: 2px solid #ffcc66;
+  position: relative;
+  background-image: var(--bg);
+  background-size: cover;
+  background-position: center;
   border-radius: 1rem;
-  padding: 2rem;
-  max-width: 280px;
+  overflow: hidden;
+  height: 280px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 1.5rem;
+  color: #fff;
+  text-align: left;
+  box-shadow: 0 0 10px rgba(255, 204, 102, 0.15);
   transition: transform 0.4s ease, box-shadow 0.4s ease;
-  box-shadow: 0 0 10px rgba(255, 204, 102, 0.2);
 }
 
-.foundry .card:hover {
-  transform: translateY(-8px) scale(1.03);
-  box-shadow: 0 0 20px rgba(255, 204, 102, 0.5);
+.foundry .card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.2));
+  z-index: 0;
+  transition: background 0.4s ease;
+}
+
+.foundry .card h3,
+.foundry .card p {
+  position: relative;
+  z-index: 1;
 }
 
 .foundry .card h3 {
-  font-size: 1.3rem;
   color: #ffcc66;
-  margin-bottom: 0.8rem;
+  font-size: 1.4rem;
+  margin-bottom: 0.5rem;
 }
 
 .foundry .card p {
   font-size: 0.95rem;
-  color: #bbb;
+  color: #ddd;
   line-height: 1.4;
 }
 
-/* Responsive layout */
+/* Hover effects */
+.foundry .card:hover {
+  transform: translateY(-8px) scale(1.03);
+  box-shadow: 0 0 25px rgba(255, 204, 102, 0.5);
+}
+
+.foundry .card:hover::before {
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0.3));
+}
+
+/* Responsive adjustments */
 @media (max-width: 768px) {
   .foundry {
     padding: 4rem 1rem;
   }
+  .foundry .card {
+    height: 220px;
+    padding: 1rem;
+  }
   .foundry h2 {
     font-size: 2rem;
   }
-  .foundry .card {
-    padding: 1.5rem;
-  }
 }
+
 
     .services-footer a{ color: var(--accent); text-decoration: underline; }
 
@@ -856,49 +882,61 @@
     <h2>Foundry Products</h2>
     <p class="section-intro">Precision-engineered castings for heavy-duty industrial use.</p>
     <div class="foundry-grid">
-      <div class="card">
+      
+      <div class="card" style="--bg:url('beaters.jpg')">
         <h3>Beaters</h3>
         <p>High-impact cast steel beaters for crushing and milling operations.</p>
       </div>
-      <div class="card">
+      
+      <div class="card" style="--bg:url('shoes.jpg')">
         <h3>Shoes</h3>
         <p>Durable foundry shoes designed for long wear and maximum efficiency.</p>
       </div>
-      <div class="card">
+      
+      <div class="card" style="--bg:url('dies.jpg')">
         <h3>Dies</h3>
         <p>Custom dies made to exact tolerances for shaping and stamping applications.</p>
       </div>
-      <div class="card">
+      
+      <div class="card" style="--bg:url('millballs.jpg')">
         <h3>Mill Balls</h3>
         <p>Precision cast steel grinding balls in 70mm, 80mm, and 100mm diameters.</p>
       </div>
-      <div class="card">
+      
+      <div class="card" style="--bg:url('stampmills.jpg')">
         <h3>Stampmills</h3>
         <p>Heavy-duty stampmills engineered for reliable ore crushing performance.</p>
       </div>
-      <div class="card">
+      
+      <div class="card" style="--bg:url('hammermills.jpg')">
         <h3>Hammer Mills</h3>
         <p>Rugged hammer mills built for high-capacity material reduction.</p>
       </div>
-      <div class="card">
+      
+      <div class="card" style="--bg:url('tappets.jpg')">
         <h3>Tappets</h3>
         <p>Precision tappets cast for consistent performance and durability.</p>
       </div>
-      <div class="card">
+      
+      <div class="card" style="--bg:url('cams.jpg')">
         <h3>Cams</h3>
         <p>Engineered cams providing high strength and precision in mechanical motion.</p>
       </div>
-      <div class="card">
+      
+      <div class="card" style="--bg:url('stampguides.jpg')">
         <h3>Stamp Guides</h3>
         <p>Guides cast to maintain alignment and smooth motion during stamping.</p>
       </div>
-      <div class="card">
+      
+      <div class="card" style="--bg:url('stampcover.jpg')">
         <h3>Stamp Covers</h3>
         <p>Protective covers designed to withstand heat and mechanical stress.</p>
       </div>
+      
     </div>
   </div>
 </section>
+
 
 
         <footer class="services-footer">
@@ -1077,3 +1115,4 @@
 </body>
 
 </html>
+
